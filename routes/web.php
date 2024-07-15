@@ -22,3 +22,8 @@ use Laravel\Socialite\Facades\Socialite;
 Route::get('/auth/{provider}redirect', [ProviderController::class, 'redirect']);
  
 Route::get('/auth/{provider}callback', [ProviderController::class, 'callback']);
+
+
+Route::get('/login', function () {
+    return view('login'); // 'login' should match the name of your blade file without the '.blade.php'
+});
