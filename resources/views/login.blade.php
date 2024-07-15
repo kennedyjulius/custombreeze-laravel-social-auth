@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Login</h1>
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('login.post') }}">
         @csrf
         <div>
             <label for="email">Email:</label>

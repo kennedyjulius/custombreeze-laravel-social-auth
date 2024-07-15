@@ -2,50 +2,46 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\Controller;
 use Illuminate\Http\Request;
 
 class ProviderController extends Controller
 {
+    public function index()
+    {
+        return view('welcome'); // The view for the home page
+    }
+
+    public function showLoginForm()
+    {
+        return view('login'); // The view for the login page
+    }
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Invalid credentials'
-            ], 401);
+        // Your login logic here
+        // Example:
+        $credentials = $request->only('email', 'password');
+        if (auth()->attempt($credentials)) {
+            return redirect()->intended('home');
         }
 
-        $token = $user->createToken('token-name')->plainTextToken;
-
-        return response()->json(['token' => $token], 200);
-    }
-    //
-    public function redirect($provider) {
-        return Socialite::driver($provider)->redirect();
+        return redirect()->back()->withErrors(['email' => 'Invalid credentials']);
     }
 
-    public function callback(){
-        $user = Socialite::driver($provider)->user();
-        $user = User::updateOrCreate([
-            'provider_id' => $SocialUser->id,
-            'provider' => $provider
-        ], [
-            'name' => $SocialUser->name,
-            'email' => $SocialUser->email,
-            //'github_token' => $SocialUser->token,
-            'provider_token' => $SocialUser->token,
-        ]);
-     
-        Auth::login($user);
-     
-        return redirect('/dashboard');
+    public function logout(Request $request)
+    {
+        auth()->logout();
+        return redirect()->route('login');
+    }
+
+    public function showRegistrationForm()
+    {
+        return view('register'); // The view for the registration page
+    }
+
+    public function register(Request $request)
+    {
+        // Your registration logic here
     }
 }
