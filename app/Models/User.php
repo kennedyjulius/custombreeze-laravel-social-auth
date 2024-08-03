@@ -46,4 +46,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public static function generateUserName($username){
+        if ($username == null) {
+           $username = Str::lower(Str::random(length: 8)); # code...
+        }
+        if (User::where('username, $username')->exists()) {
+            # code...
+            $newUsername = $username.Str::lower(Str::random(length: 3));
+            $username = self::generateUserName(newUsername);
+        }
+        return $username;
+    }
 }
